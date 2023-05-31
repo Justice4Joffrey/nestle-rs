@@ -1,0 +1,51 @@
+---
+source: nestle_core/src/macros/derive.rs
+assertion_line: 301
+expression: format_source(derive_nestle(input).to_string().as_str())
+---
+impl ::nestle::core::Nestle for Foo {
+    const TYPE_NAME: &'static str = "Foo";
+    const WIDTH: u8 = 16u8;
+
+    fn decode_from(
+        id: i64,
+        offset: &mut u8,
+    ) -> ::std::result::Result<Self, ::nestle::core::error::DecodeError> {
+        ::nestle::core::check_i64_width(Self::TYPE_NAME, Self::WIDTH, *offset)?;
+        let shift = 64 - *offset - 16u8;
+        let shifted = id >> shift;
+        let res = {
+            let (res, overflow) = 1_i64.overflowing_shl(16u8 as u32);
+            if overflow {
+                0
+            } else {
+                res
+            }
+        };
+        let value = (shifted & (res - 1)) as i16 as i64;
+        *offset += 16u8;
+        Ok(match value {
+            1i64 => Self::Foo,
+            2i64 => Self::Bar,
+            3i64 => Self::Baz,
+            _ => {
+                Err(::nestle::core::error::DecodeError::NotFound {
+                    typ: Self::TYPE_NAME,
+                    disc: value,
+                })?
+            }
+        })
+    }
+
+    fn encode_into(
+        &self,
+        id: &mut i64,
+        offset: u8,
+    ) -> ::std::result::Result<(), ::nestle::core::error::EncodeError> {
+        ::nestle::core::check_i64_width(Self::TYPE_NAME, Self::WIDTH, offset)?;
+        let shift = 64 - offset - 16u8;
+        *id |= ((unsafe { *<*const _>::from(self).cast::<i16>() } as i64 as u64) << shift) as i64;
+        Ok(())
+    }
+}
+

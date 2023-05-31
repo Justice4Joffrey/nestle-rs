@@ -12,6 +12,7 @@ proc-macro-error = "1"
 proc-macro2 = "1"
 quote = "1"
 syn = { version = "2", features = ["full"] }
+thiserror = "1.0.40"
 
 [dev-dependencies]
 colored-diff = "0.2.3"

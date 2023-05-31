@@ -1,0 +1,37 @@
+---
+source: nestle_core/src/macros/derive.rs
+assertion_line: 349
+expression: format_source(derive_nestle(input).to_string().as_str())
+---
+impl ::nestle::core::Nestle for MyStruct {
+    const TYPE_NAME: &'static str = "MyStruct";
+    const WIDTH: u8 = 40u8;
+
+    fn decode_from(
+        id: i64,
+        offset: &mut u8,
+    ) -> ::std::result::Result<Self, ::nestle::core::error::DecodeError> {
+        ::nestle::core::check_i64_width(Self::TYPE_NAME, Self::WIDTH, *offset)?;
+        let _0 = ::nestle::core::Nestle::decode_from(id, offset)?;
+        let _1 = ::nestle::core::Nestle::decode_from(id, offset)?;
+        let _2 = ::nestle::core::Nestle::decode_from(id, offset)?;
+        Ok(Self(_0, _1, _2))
+    }
+
+    fn encode_into(
+        &self,
+        id: &mut i64,
+        offset: u8,
+    ) -> ::std::result::Result<(), ::nestle::core::error::EncodeError> {
+        ::nestle::core::check_i64_width(Self::TYPE_NAME, Self::WIDTH, offset)?;
+        let Self(_0, _1, _2) = self;
+        <MyEnum as ::nestle::core::Nestle>::encode_into(&_0, id, offset)?;
+        let offset = offset + <MyEnum as ::nestle::core::Nestle>::WIDTH;
+        <i16 as ::nestle::core::Nestle>::encode_into(&_1, id, offset)?;
+        let offset = offset + <i16 as ::nestle::core::Nestle>::WIDTH;
+        <i8 as ::nestle::core::Nestle>::encode_into(&_2, id, offset)?;
+        let offset = offset + <i8 as ::nestle::core::Nestle>::WIDTH;
+        Ok(())
+    }
+}
+

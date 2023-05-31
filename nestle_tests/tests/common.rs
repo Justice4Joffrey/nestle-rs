@@ -1,112 +1,72 @@
-#![allow(dead_code)]
+use std::i64;
 
-use std::{
-    hash::{Hash, Hasher},
-    rc::Rc,
-};
+use nestle::derives::Nestle;
 
-use depends::{
-    core::{Dependency, Depends, LeafNode, UpdateDependee, UpdateLeaf},
-    derives::{dependencies, Dependee, Leaf},
-};
-
-/// A number which can be edited from the _outside_ i.e. has _no_ dependencies.
-#[derive(Leaf, Default, Hash)]
-pub struct NumberInput {
-    value: i32,
+#[derive(Debug, PartialEq, Eq, Nestle)]
+#[repr(i8)]
+pub enum Birds {
+    Eagle = 1,
+    Albatross = 2,
+    Hawk = 3,
+    Pigeon = -1,
+    Dove = -2,
+    Swallow = -3,
 }
 
-impl UpdateLeaf for NumberInput {
-    type Input = i32;
-
-    fn update_mut(&mut self, input: Self::Input) {
-        // Implementing this trait will provide a way for code outside of this graph to
-        // change its internal state. This is just a simple replace for now.
-        self.value = input;
-    }
+#[derive(Debug, PartialEq, Eq, Nestle)]
+#[repr(i8)]
+pub enum Mammals {
+    Cat = 1,
+    Dog = 2,
+    Hamster = 3,
+    Horse = -1,
+    Pig = -2,
+    Donkey = -3,
 }
 
-/// Any *derived* node must state its dependencies. If there are more than one,
-/// this must be wrapped in a struct marked as `#[dependencies]` as shown.
-#[dependencies]
-pub struct Components {
-    left: LeafNode<NumberInput>,
-    right: LeafNode<NumberInput>,
+#[derive(Debug, PartialEq, Eq, Nestle)]
+#[repr(i16)]
+pub enum Fish {
+    Shark = 1,
+    Tuna = 2,
+    Salmon = -1,
+    Nemo = -2,
 }
 
-#[dependencies]
-pub struct AnswerComponents {
-    left: SumNode,
-    right: MultiplyNode,
+#[derive(Debug, PartialEq, Eq, Nestle)]
+#[repr(i8)]
+pub enum BirdNames {
+    Donald = 1,
+    Daffy = 2,
+    Daisy = 3,
+    Tweety = -1,
+    Woody = -2,
+    Zazu = -3,
 }
 
-#[derive(Dependee, Default, Hash)]
-#[depends(dependencies = AnswerComponents, node_name = AnswerNode)]
-pub struct Answer {
-    value: i32,
+#[derive(Debug, PartialEq, Eq, Nestle)]
+#[nestle(width = 16)]
+pub struct MyBirds {
+    pub name: BirdNames,
+    pub bird: Birds,
 }
 
-#[derive(Dependee, Default, Hash)]
-#[depends(dependencies = Dependency<Rc<LeafNode<NumberInput>>>, node_name = SquareNode)]
-pub struct Square {
-    value: i32,
-}
+#[derive(Debug, PartialEq, Eq, Nestle)]
+#[nestle(width = 16)]
+pub struct MyBirdsTuple(pub BirdNames, pub Birds);
 
-#[derive(Dependee, Default, Hash)]
-#[depends(dependencies = Components, node_name = SumNode)]
-pub struct Sum {
-    value: i32,
-}
+#[derive(Debug, PartialEq, Eq, Nestle)]
+#[nestle(width = 16)]
+pub struct NumberTuple(pub i8, pub i8);
 
-#[derive(Dependee, Default, Hash)]
-#[depends(dependencies = Components, node_name = MultiplyNode)]
-pub struct Multiply {
-    value: i32,
-}
-
-impl UpdateDependee for Square {
-    fn update_mut(&mut self, input: <Self as Depends>::Input<'_>) {
-        self.value = input.value.pow(2);
-    }
-}
-
-impl UpdateDependee for Sum {
-    fn update_mut(&mut self, input: <Self as Depends>::Input<'_>) {
-        let ComponentsRef { left, right } = input;
-        self.value = left.value + right.value;
-    }
-}
-
-impl UpdateDependee for Answer {
-    fn update_mut(&mut self, input: <Self as Depends>::Input<'_>) {
-        let AnswerComponentsRef { left, right } = input;
-        self.value = left.value + 2 * right.value;
-    }
-}
-
-impl UpdateDependee for Multiply {
-    fn update_mut(&mut self, input: <Self as Depends>::Input<'_>) {
-        let ComponentsRef { left, right } = input;
-        self.value = left.value * right.value;
-    }
-}
-
-pub struct MyGraph {
-    pub a: Rc<LeafNode<NumberInput>>,
-    pub b: Rc<LeafNode<NumberInput>>,
-    pub c: Rc<LeafNode<NumberInput>>,
-    pub answer: Rc<AnswerNode>,
-}
-
-pub fn my_graph() -> MyGraph {
-    let a = NumberInput::default().into_leaf();
-    let b = NumberInput::default().into_leaf();
-    let c = NumberInput::default().into_leaf();
-
-    let sum = Sum::default().into_node(Components::new(Rc::clone(&a), Rc::clone(&b)));
-    let multiply = Multiply::default().into_node(Components::new(Rc::clone(&a), Rc::clone(&c)));
-    let answer =
-        Answer::default().into_node(AnswerComponents::new(Rc::clone(&sum), Rc::clone(&multiply)));
-
-    MyGraph { a, b, c, answer }
+#[derive(Debug, PartialEq, Eq, Nestle)]
+#[nestle(width = 24)]
+#[repr(i8)]
+pub enum MyAnimals {
+    Birds(MyBirds) = 1,
+    Birds2(MyBirdsTuple) = 2,
+    Mammals(Mammals) = -1,
+    Fish(Fish) = -2,
+    Number(i8) = -3,
+    NumberTuple(NumberTuple) = -4,
 }
