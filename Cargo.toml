@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "nestle",
+    "nestle_derives",
+    "nestle_core",
+    "nestle_tests",
+]
