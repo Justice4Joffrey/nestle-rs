@@ -6,4 +6,4 @@ publish = false
 
 [dependencies]
 nestle = {path = "../nestle"}
-
+proptest = "1.2.0"
