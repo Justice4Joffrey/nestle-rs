@@ -290,7 +290,7 @@ pub fn derive_nestle(input: TokenStream) -> TokenStream {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, not(miri)))]
 mod tests {
     use insta::assert_snapshot;
     use syn::parse_quote;

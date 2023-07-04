@@ -1,74 +1,78 @@
-use nestle::core::Nestle;
-use proptest::prelude::*;
-
 use crate::common::*;
 
 mod common;
 
-fn birds_strategy() -> impl Strategy<Value = Birds> {
-    prop_oneof![
-        Just(Birds::Eagle),
-        Just(Birds::Albatross),
-        Just(Birds::Hawk),
-        Just(Birds::Pigeon),
-        Just(Birds::Dove),
-        Just(Birds::Swallow),
-    ]
-}
+#[cfg(not(miri))]
+mod test {
+    use nestle::core::Nestle;
+    use proptest::prelude::*;
 
-fn mammals_strategy() -> impl Strategy<Value = Mammals> {
-    prop_oneof![
-        Just(Mammals::Cat),
-        Just(Mammals::Dog),
-        Just(Mammals::Hamster),
-        Just(Mammals::Horse),
-        Just(Mammals::Pig),
-        Just(Mammals::Donkey),
-    ]
-}
+    use super::*;
 
-fn fish_strategy() -> impl Strategy<Value = Fish> {
-    prop_oneof![
-        Just(Fish::Shark),
-        Just(Fish::Tuna),
-        Just(Fish::Salmon),
-        Just(Fish::Nemo),
-    ]
-}
+    fn birds_strategy() -> impl Strategy<Value = Birds> {
+        prop_oneof![
+            Just(Birds::Eagle),
+            Just(Birds::Albatross),
+            Just(Birds::Hawk),
+            Just(Birds::Pigeon),
+            Just(Birds::Dove),
+            Just(Birds::Swallow),
+        ]
+    }
 
-fn bird_names_strategy() -> impl Strategy<Value = BirdNames> {
-    prop_oneof![
-        Just(BirdNames::Donald),
-        Just(BirdNames::Daffy),
-        Just(BirdNames::Daisy),
-        Just(BirdNames::Tweety),
-        Just(BirdNames::Woody),
-        Just(BirdNames::Zazu),
-    ]
-}
+    fn mammals_strategy() -> impl Strategy<Value = Mammals> {
+        prop_oneof![
+            Just(Mammals::Cat),
+            Just(Mammals::Dog),
+            Just(Mammals::Hamster),
+            Just(Mammals::Horse),
+            Just(Mammals::Pig),
+            Just(Mammals::Donkey),
+        ]
+    }
 
-fn my_birds_strategy() -> impl Strategy<Value = MyBirds> {
-    (bird_names_strategy(), birds_strategy()).prop_map(|(name, bird)| MyBirds { name, bird })
-}
+    fn fish_strategy() -> impl Strategy<Value = Fish> {
+        prop_oneof![
+            Just(Fish::Shark),
+            Just(Fish::Tuna),
+            Just(Fish::Salmon),
+            Just(Fish::Nemo),
+        ]
+    }
 
-fn my_birds_tuple_strategy() -> impl Strategy<Value = MyBirdsTuple> {
-    (bird_names_strategy(), birds_strategy()).prop_map(|(name, bird)| MyBirdsTuple(name, bird))
-}
+    fn bird_names_strategy() -> impl Strategy<Value = BirdNames> {
+        prop_oneof![
+            Just(BirdNames::Donald),
+            Just(BirdNames::Daffy),
+            Just(BirdNames::Daisy),
+            Just(BirdNames::Tweety),
+            Just(BirdNames::Woody),
+            Just(BirdNames::Zazu),
+        ]
+    }
 
-fn my_animals_strategy() -> impl Strategy<Value = MyAnimals> {
-    prop_oneof![
-        my_birds_strategy().prop_map(MyAnimals::Birds),
-        my_birds_tuple_strategy().prop_map(MyAnimals::Birds2),
-        mammals_strategy().prop_map(MyAnimals::Mammals),
-        fish_strategy().prop_map(MyAnimals::Fish),
-        any::<i8>().prop_map(MyAnimals::Number),
-        (any::<i8>(), any::<i8>())
-            .prop_map(|(first, second)| NumberTuple(first, second))
-            .prop_map(MyAnimals::NumberTuple),
-    ]
-}
+    fn my_birds_strategy() -> impl Strategy<Value = MyBirds> {
+        (bird_names_strategy(), birds_strategy()).prop_map(|(name, bird)| MyBirds { name, bird })
+    }
 
-proptest! {
+    fn my_birds_tuple_strategy() -> impl Strategy<Value = MyBirdsTuple> {
+        (bird_names_strategy(), birds_strategy()).prop_map(|(name, bird)| MyBirdsTuple(name, bird))
+    }
+
+    fn my_animals_strategy() -> impl Strategy<Value = MyAnimals> {
+        prop_oneof![
+            my_birds_strategy().prop_map(MyAnimals::Birds),
+            my_birds_tuple_strategy().prop_map(MyAnimals::Birds2),
+            mammals_strategy().prop_map(MyAnimals::Mammals),
+            fish_strategy().prop_map(MyAnimals::Fish),
+            any::<i8>().prop_map(MyAnimals::Number),
+            (any::<i8>(), any::<i8>())
+                .prop_map(|(first, second)| NumberTuple(first, second))
+                .prop_map(MyAnimals::NumberTuple),
+        ]
+    }
+
+    proptest! {
     #[test]
     fn parses_birds(bird in birds_strategy()) {
         let encoded = bird.encode().unwrap();
@@ -121,4 +125,5 @@ proptest! {
         let decoded = Nestle::decode(encoded).unwrap();
         prop_assert_eq!(animal, decoded);
     }
+        }
 }
