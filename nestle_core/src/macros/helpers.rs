@@ -5,7 +5,8 @@ use std::{
 
 pub fn format_source(source: &str) -> String {
     let mut rustfmt = Command::new("rustfmt")
-        .args(["+nightly", "--edition", "2021"])
+        .args(["--edition", "2021"])
+        .env("RUSTUP_TOOLCHAIN", "nightly")
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()

@@ -1,6 +1,5 @@
 ---
 source: nestle_core/src/macros/derive.rs
-assertion_line: 318
 expression: format_source(derive_nestle(input).to_string().as_str())
 ---
 impl ::nestle::core::Nestle for Foo {
@@ -43,8 +42,9 @@ impl ::nestle::core::Nestle for Foo {
         offset: u8,
     ) -> ::std::result::Result<(), ::nestle::core::error::EncodeError> {
         ::nestle::core::check_i64_width(Self::TYPE_NAME, Self::WIDTH, offset)?;
-        let shift = 64 - offset - 16u8;
-        *id |= ((unsafe { *<*const _>::from(self).cast::<i16>() } as i64 as u64) << shift) as i64;
+        let shift = 64 - 16u8;
+        *id |=
+            ((unsafe { *<*const _>::from(self).cast::<i16>() } as u64) << shift >> offset) as i64;
         match self {
             Self::Foo(inner) => {
                 <Quux as ::nestle::core::Nestle>::encode_into(inner, id, offset + 16u8)?
