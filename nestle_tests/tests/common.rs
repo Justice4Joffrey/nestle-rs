@@ -1,8 +1,6 @@
-use std::i64;
-
 use nestle::derives::Nestle;
 
-#[derive(Debug, PartialEq, Eq, Nestle)]
+#[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[repr(i8)]
 pub enum Birds {
     Eagle = 1,
@@ -13,7 +11,7 @@ pub enum Birds {
     Swallow = -3,
 }
 
-#[derive(Debug, PartialEq, Eq, Nestle)]
+#[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[repr(i8)]
 pub enum Mammals {
     Cat = 1,
@@ -24,7 +22,7 @@ pub enum Mammals {
     Donkey = -3,
 }
 
-#[derive(Debug, PartialEq, Eq, Nestle)]
+#[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[repr(i16)]
 pub enum Fish {
     Shark = 1,
@@ -33,7 +31,7 @@ pub enum Fish {
     Nemo = -2,
 }
 
-#[derive(Debug, PartialEq, Eq, Nestle)]
+#[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[repr(i8)]
 pub enum BirdNames {
     Donald = 1,
@@ -44,22 +42,22 @@ pub enum BirdNames {
     Zazu = -3,
 }
 
-#[derive(Debug, PartialEq, Eq, Nestle)]
+#[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 16)]
 pub struct MyBirds {
     pub name: BirdNames,
     pub bird: Birds,
 }
 
-#[derive(Debug, PartialEq, Eq, Nestle)]
+#[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 16)]
 pub struct MyBirdsTuple(pub BirdNames, pub Birds);
 
-#[derive(Debug, PartialEq, Eq, Nestle)]
+#[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 16)]
 pub struct NumberTuple(pub i8, pub i8);
 
-#[derive(Debug, PartialEq, Eq, Nestle)]
+#[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 24)]
 #[repr(i8)]
 pub enum MyAnimals {

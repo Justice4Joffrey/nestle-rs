@@ -43,3 +43,15 @@ fn test_named_struct() {
         }
     );
 }
+
+#[test]
+fn test_woody_pigeon() {
+    let original = MyBirds {
+        name: BirdNames::Woody,
+        bird: Birds::Pigeon,
+    };
+
+    let encoded = original.encode_unchecked();
+    let decoded: MyBirds = Nestle::decode(encoded).unwrap();
+    assert_eq!(decoded, original);
+}
