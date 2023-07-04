@@ -145,7 +145,7 @@ fn enum_parts(
         width,
         quote! {
             let shift = 64 - #self_width;
-            *id += ((unsafe { *<*const _>::from(self).cast::<#repr>() } as u64) << shift >> offset) as i64;
+            *id |= ((unsafe { *<*const _>::from(self).cast::<#repr>() } as u64) << shift >> offset) as i64;
             #encode_variants
             Ok(())
         },
