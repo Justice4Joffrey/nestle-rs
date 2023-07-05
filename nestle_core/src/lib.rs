@@ -70,6 +70,21 @@ pub fn check_i64_width(type_name: &'static str, width: u8, offset: u8) -> Result
 
 macro_rules! impl_for_primitive {
     ($typ:ty, $cst:ty, $width:literal) => {
+        impl_for_primitive_with_cast!(
+            $typ,
+            |this: $typ| {
+                this as $cst as i64
+            },
+            |value: i64| {
+                Some(value as $typ)
+            },
+            $width
+        );
+    };
+}
+
+macro_rules! impl_for_primitive_with_cast {
+    ($typ:ty, $cst_into:expr, $cst_from:expr, $width:literal) => {
         impl Nestle for $typ {
             const TYPE_NAME: &'static str = stringify!($typ);
             const WIDTH: u8 = $width;
@@ -86,15 +101,15 @@ macro_rules! impl_for_primitive {
                         res
                     }
                 };
-                let value = (shifted & (res - 1)) as $typ;
+                let value = $cst_from(shifted & (res - 1)).ok_or_else(|| DecodeError::NotFound { typ: Self::TYPE_NAME, disc: shifted & (res - 1) });
                 *offset += Self::WIDTH;
-                Ok(value)
+                value
             }
 
             fn encode_into(&self, id: &mut i64, offset: u8) -> Result<(), EncodeError> {
                 check_i64_width(Self::TYPE_NAME, Self::WIDTH, offset)?;
                 let shift = 64 - offset - Self::WIDTH;
-                *id |= ((*self as $cst as u64 as i64) << shift) as i64;
+                *id |= $cst_into(*self) << shift;
                 Ok(())
             }
         }
@@ -105,3 +120,60 @@ impl_for_primitive!(i8, u8, 8);
 impl_for_primitive!(i16, u16, 16);
 impl_for_primitive!(i32, u32, 32);
 impl_for_primitive!(i64, u64, 64);
+impl_for_primitive!(u8, u8, 8);
+impl_for_primitive!(u16, u16, 16);
+impl_for_primitive!(u32, u32, 32);
+impl_for_primitive!(u64, u64, 64);
+impl_for_primitive_with_cast!(
+    f32,
+    |this: f32| {
+        this.to_bits() as i64
+    },
+    |value: i64| {
+        Some(f32::from_bits(value as u32))
+    },
+    32
+);
+impl_for_primitive_with_cast!(
+    f64,
+    |this: f64| {
+        this.to_bits() as i64
+    },
+    |value: i64| {
+        Some(f64::from_bits(value as u64))
+    },
+    64
+);
+impl_for_primitive_with_cast!(
+    bool,
+    |this: bool| {
+        this as i64
+    },
+    |value: i64| {
+        Some(value != 0)
+    },
+    8
+);
+impl_for_primitive_with_cast!(
+    char,
+    |this: char| {
+        this as i64
+    },
+    |value: i64| {
+        char::from_u32(value as u32)
+    },
+    32
+);
+
+impl Nestle for () {
+    const WIDTH: u8 = 0;
+    const TYPE_NAME: &'static str = "()";
+
+    fn decode_from(_: i64, _: &mut u8) -> Result<Self, DecodeError> {
+        Ok(())
+    }
+
+    fn encode_into(&self, _: &mut i64, _: u8) -> Result<(), EncodeError> {
+        Ok(())
+    }
+}
