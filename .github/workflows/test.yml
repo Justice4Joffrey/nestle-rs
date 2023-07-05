@@ -17,8 +17,9 @@ jobs:
         with:
           submodules: true
       - name: Install nightly for fmt tests
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@master
         with:
+          toolchain: nightly
           components: rustfmt
       - name: Install ${{ matrix.toolchain }}
         uses: dtolnay/rust-toolchain@master
@@ -30,8 +31,7 @@ jobs:
         if: hashFiles('Cargo.lock') == ''
         run: cargo generate-lockfile
       - name: cargo test --locked
-        # ignored tests use the nightly formatter
-        run: cargo test --locked --all-features --all-targets -- --include-ignored
+        run: cargo test --locked --all-features --all-targets
   minimal:
     runs-on: ubuntu-latest
     name: ubuntu / stable / minimal-versions
@@ -40,9 +40,14 @@ jobs:
         with:
           submodules: true
       - name: Install stable
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
       - name: Install nightly for -Zminimal-versions
-        uses: dtolnay/rust-toolchain@nightly
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly
+          components: rustfmt
       - name: rustup default stable
         run: rustup default stable
       - name: cargo update -Zminimal-versions
@@ -61,7 +66,14 @@ jobs:
         with:
           submodules: true
       - name: Install stable
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+      - name: Install nightly for fmt tests
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly
+          components: rustfmt
       - name: cargo generate-lockfile
         if: hashFiles('Cargo.lock') == ''
         run: cargo generate-lockfile
@@ -75,9 +87,15 @@ jobs:
         with:
           submodules: true
       - name: Install stable
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@master
         with:
+          toolchain: stable
           components: llvm-tools-preview
+      - name: Install nightly for fmt tests
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly
+          components: rustfmt
       - name: cargo install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: cargo generate-lockfile

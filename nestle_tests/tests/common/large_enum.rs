@@ -1,5 +1,5 @@
-use proptest::prelude::*;
 use nestle::derives::Nestle;
+use proptest::prelude::*;
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[repr(i8)]

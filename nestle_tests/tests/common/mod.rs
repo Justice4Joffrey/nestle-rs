@@ -1,5 +1,5 @@
-use nestle::derives::Nestle;
 pub use large_enum::*;
+use nestle::derives::Nestle;
 
 mod large_enum;
 
@@ -120,7 +120,15 @@ pub struct NotFullTuplesWithNumbers(pub DoubleUnsignedEightNumbers, pub u16, pub
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 56)]
-pub struct FullBool(pub bool, pub bool, pub bool, pub bool, pub bool, pub bool, pub bool);
+pub struct FullBool(
+    pub bool,
+    pub bool,
+    pub bool,
+    pub bool,
+    pub bool,
+    pub bool,
+    pub bool,
+);
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 24)]
@@ -140,11 +148,32 @@ pub struct Empty();
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 0)]
-pub struct ALotOfUnits(pub (), pub (), pub (), pub (), pub (), pub (), pub (), pub (), pub (), pub ());
+pub struct ALotOfUnits(
+    pub (),
+    pub (),
+    pub (),
+    pub (),
+    pub (),
+    pub (),
+    pub (),
+    pub (),
+    pub (),
+    pub (),
+);
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 40)]
-pub struct UnitsWithOthers(pub (), pub (), pub bool, pub (), pub u8, pub (), pub i8, pub (), pub i16);
+pub struct UnitsWithOthers(
+    pub (),
+    pub (),
+    pub bool,
+    pub (),
+    pub u8,
+    pub (),
+    pub i8,
+    pub (),
+    pub i16,
+);
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 56)]
@@ -153,7 +182,7 @@ pub struct CharWithOthers(pub u8, pub char, pub i16, pub ());
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 16)]
 pub struct SinglePrimitiveFieldStruct {
-    pub field: u16
+    pub field: u16,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
@@ -167,13 +196,13 @@ pub struct SeveralPrimitiveFieldsStruct {
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 56)]
 pub struct SingleTupleFieldStruct {
-    pub field: CharWithOthers
+    pub field: CharWithOthers,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
 #[nestle(width = 56)]
 pub struct SingleStructFieldStruct {
-    pub field: SingleTupleFieldStruct
+    pub field: SingleTupleFieldStruct,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Nestle)]
