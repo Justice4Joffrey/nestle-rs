@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "examples",
     "nestle",
     "nestle_derives",
     "nestle_core",

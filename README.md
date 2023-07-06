@@ -1,8 +1,8 @@
-# Nestle 
+# Nestle
 
-[![Codecov](https://codecov.io/gh/Justice4Joffrey/depends-rs/coverage.svg?branch=master)](https://codecov.io/gh/Justice4Joffrey/nestle-rs)
+[![Crates.io](https://img.shields.io/crates/v/nestle.svg)](https://crates.io/crates/nestle)
+[![Documentation](https://docs.rs/nestle/badge.svg)](https://docs.rs/nestle/)
+[![Codecov](https://codecov.io/gh/Justice4Joffrey/nestle-rs/coverage.svg?branch=master)](https://codecov.io/gh/Justice4Joffrey/nestle-rs)
 [![Dependency status](https://deps.rs/repo/github/Justice4Joffrey/nestle-rs/status.svg)](https://deps.rs/repo/github/Justice4Joffrey/nestle-rs)
 
-## Work in progress.
-
-Encode arbitrary nested tree-structured data in to a single integer.
+Encode/decode arbitrary nested tree-structured data with a single integer.
