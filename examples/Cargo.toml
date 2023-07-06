@@ -1,0 +1,12 @@
+[package]
+name = "examples"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+nestle = { path = "../nestle" }
+
+[[example]]
+name = "crypto_instruments"
+path = "crypto_instruments.rs"

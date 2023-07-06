@@ -7,7 +7,9 @@ mod common;
 #[test]
 fn test_named_struct() {
     assert_eq!(
-        MyBirdsTuple(BirdNames::Donald, Birds::Eagle,).encode_unchecked(),
+        MyBirdsTuple(BirdNames::Donald, Birds::Eagle,)
+            .encode()
+            .unwrap(),
         0b0000000100000001000000000000000000000000000000000000000000000000_u64 as i64
     );
     assert_eq!(
@@ -18,7 +20,9 @@ fn test_named_struct() {
         MyBirdsTuple(BirdNames::Donald, Birds::Eagle),
     );
     assert_eq!(
-        MyBirdsTuple(BirdNames::Tweety, Birds::Pigeon,).encode_unchecked(),
+        MyBirdsTuple(BirdNames::Tweety, Birds::Pigeon,)
+            .encode()
+            .unwrap(),
         0b1111111111111111000000000000000000000000000000000000000000000000_u64 as i64
     );
     assert_eq!(

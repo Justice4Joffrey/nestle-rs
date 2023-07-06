@@ -6,12 +6,12 @@ mod common;
 
 #[test]
 fn test_simple_enum() {
-    assert_eq!(Birds::Eagle.encode_unchecked(), 1 << 56);
-    assert_eq!(Birds::Albatross.encode_unchecked(), 2 << 56);
-    assert_eq!(Birds::Hawk.encode_unchecked(), 3 << 56);
-    assert_eq!(Birds::Pigeon.encode_unchecked(), -1 << 56);
-    assert_eq!(Birds::Dove.encode_unchecked(), -2 << 56);
-    assert_eq!(Birds::Swallow.encode_unchecked(), -3 << 56);
+    assert_eq!(Birds::Eagle.encode().unwrap(), 1 << 56);
+    assert_eq!(Birds::Albatross.encode().unwrap(), 2 << 56);
+    assert_eq!(Birds::Hawk.encode().unwrap(), 3 << 56);
+    assert_eq!(Birds::Pigeon.encode().unwrap(), -1 << 56);
+    assert_eq!(Birds::Dove.encode().unwrap(), -2 << 56);
+    assert_eq!(Birds::Swallow.encode().unwrap(), -3 << 56);
 
     assert!(Birds::decode(0).is_err());
     assert_eq!(Birds::decode(1 << 56).unwrap(), Birds::Eagle);

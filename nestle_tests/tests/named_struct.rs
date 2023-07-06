@@ -11,7 +11,8 @@ fn test_named_struct() {
             name: BirdNames::Donald,
             bird: Birds::Eagle,
         }
-        .encode_unchecked(),
+        .encode()
+        .unwrap(),
         0b0000000100000001000000000000000000000000000000000000000000000000_u64 as i64
     );
     assert_eq!(
@@ -29,7 +30,8 @@ fn test_named_struct() {
             name: BirdNames::Tweety,
             bird: Birds::Pigeon,
         }
-        .encode_unchecked(),
+        .encode()
+        .unwrap(),
         0b1111111111111111000000000000000000000000000000000000000000000000_u64 as i64
     );
     assert_eq!(
@@ -51,7 +53,7 @@ fn test_woody_pigeon() {
         bird: Birds::Pigeon,
     };
 
-    let encoded = original.encode_unchecked();
+    let encoded = original.encode().unwrap();
     let decoded: MyBirds = Nestle::decode(encoded).unwrap();
     assert_eq!(decoded, original);
 }

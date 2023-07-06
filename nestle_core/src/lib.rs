@@ -46,12 +46,6 @@ pub trait Nestle: Sized {
         self.encode_into(&mut id, 0)?;
         Ok(id)
     }
-
-    /// Any types using the macros to implement `Nestle` are guaranteed to be
-    /// able to decode from an `i64` without error.
-    fn encode_unchecked(&self) -> i64 {
-        self.encode().unwrap()
-    }
 }
 
 pub fn check_i64_width(type_name: &'static str, width: u8, offset: u8) -> Result<(), ValueTooWide> {

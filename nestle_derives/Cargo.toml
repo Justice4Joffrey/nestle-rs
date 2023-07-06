@@ -1,12 +1,12 @@
 [package]
 name = "nestle_derives"
-version = "0.4.0"
+version = "0.1.0"
 edition = "2021"
 license = "MIT"
-description = "Nested integer enum tree structures"
+description = "Encode/decode arbitrary nested tree-structured data with a single integer"
 
 [dependencies]
-nestle_core = {path = "../nestle_core", version = "0.4.0"}
+nestle_core = {path = "../nestle_core", version = "0.1.0"}
 
 proc-macro-error = "1"
 proc-macro2 = "1"

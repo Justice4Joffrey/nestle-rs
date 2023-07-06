@@ -1,16 +1,16 @@
 [package]
 name = "nestle"
-version = "0.4.0"
+version = "0.1.0"
 edition = "2021"
-description = "Nested integer enum tree structures"
+description = "Encode/decode arbitrary nested tree-structured data with a single integer"
 license = "MIT"
 repository = "https://github.com/Justice4Joffrey/nestle-rs"
-keywords = []
+keywords = ["serialization", "encoding"]
 readme = "../README.md"
 
 [dependencies]
-nestle_core = {path = "../nestle_core", version = "0.4.0"}
-nestle_derives = {path = "../nestle_derives", version = "0.4.0"}
+nestle_core = {path = "../nestle_core", version = "0.1.0"}
+nestle_derives = {path = "../nestle_derives", version = "0.1.0"}
 
 
 [package.metadata.docs.rs]
